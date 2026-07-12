@@ -36,16 +36,19 @@ export default function Hero() {
           transition={{ duration: 1.1, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
-          <div className="absolute inset-0 animate-kenburns" style={{ background: slide.gradient }} />
-          <div className="absolute right-[6%] bottom-0 flex items-end gap-2 h-[58%] opacity-90">
-            {slide.spines.map((s, i) => (
-              <div
-                key={i}
-                className="rounded-t-md"
-                style={{ width: s.w, height: `${s.h}%`, background: s.color }}
-              />
-            ))}
-          </div>
+          <div
+            className="absolute inset-0 animate-kenburns bg-cover bg-center"
+            style={{ backgroundImage: `url(${slide.image})` }}
+          />
+          {/* Dark gradient overlay so the headline stays readable over the photo */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(90deg, hsl(var(--color-ink) / 0.82) 0%, hsl(var(--color-ink) / 0.55) 45%, hsl(var(--color-ink) / 0.25) 100%)',
+            }}
+          />
+          <div className="absolute inset-0" style={{ background: slide.gradient, opacity: 0.35, mixBlendMode: 'multiply' }} />
 
           <div className="relative z-10 h-full flex flex-col justify-center max-w-[640px] px-7 mx-auto md:ml-[8%]">
             <div className="font-serif-display italic font-medium text-mustard-soft text-xl mb-4">
