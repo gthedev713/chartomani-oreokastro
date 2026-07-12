@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: 42.0 55.6% 92.9%;
+  --color-paper-deep: 42.6 49.2% 87.6%;
+  --color-card: 45.0 100.0% 98.4%;
+  --color-ink: 225.0 26.1% 18.0%;
+  --color-ink-soft: 225.9 23.0% 29.0%;
+  --color-burgundy: 350.2 54.4% 31.0%;
+  --color-burgundy-deep: 349.8 54.6% 23.3%;
+  --color-mustard: 38.7 62.8% 48.4%;
+  --color-mustard-soft: 39.0 66.5% 63.7%;
+  --color-sage: 112.3 14.6% 41.8%;
+  --color-text-main: 32.7 14.7% 14.7%;
+  --color-text-soft: 36.0 13.2% 37.1%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background-color: hsl(var(--color-paper));
+  color: hsl(var(--color-text-main));
+}
+
+.font-serif-display {
+  font-family: 'Fraunces', serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ribbon bookmark scroll progress — signature element */
+.ribbon-track {
+  position: fixed;
+  top: 0;
+  right: 22px;
+  width: 10px;
+  height: 100vh;
+  z-index: 60;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+}
+.ribbon-track::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background: hsl(var(--color-burgundy) / 0.12);
+}
+.ribbon-fill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  background: linear-gradient(180deg, hsl(var(--color-mustard)), hsl(var(--color-burgundy)));
+  border-radius: 0 0 3px 3px;
+}
+.ribbon-fill::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  left: 0;
+  width: 10px;
+  height: 16px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.09) translate(-1.5%, -1%);
+  }
+}
+.animate-kenburns {
+  animation: kenburns 9s ease-in-out infinite alternate;
+}
+
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: scroll-left 32s linear infinite;
+}
+.marquee-band:hover .animate-marquee {
+  animation-play-state: paused;
+}
