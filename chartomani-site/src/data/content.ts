@@ -31,6 +31,8 @@ export const heroSlides = [
     ],
     gradient:
       'radial-gradient(ellipse at 75% 20%, hsl(var(--color-mustard) / 0.35), transparent 55%), linear-gradient(135deg, hsl(var(--color-ink)) 0%, #2c3350 55%, hsl(var(--color-burgundy-deep)) 100%)',
+    // TODO: swap for a real photo of the shop — this is a free stock photo for now
+    image: 'https://images.unsplash.com/photo-1521123845560-14093637aa7d?auto=format&fit=crop&w=1600&q=80',
   },
   {
     id: 1,
@@ -50,6 +52,7 @@ export const heroSlides = [
     ],
     gradient:
       'radial-gradient(ellipse at 20% 75%, hsl(var(--color-sage) / 0.4), transparent 55%), linear-gradient(135deg, hsl(var(--color-burgundy-deep)) 0%, #6d2836 50%, hsl(var(--color-ink)) 100%)',
+    image: 'https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?auto=format&fit=crop&w=1600&q=80',
   },
   {
     id: 2,
@@ -69,6 +72,7 @@ export const heroSlides = [
     ],
     gradient:
       'radial-gradient(ellipse at 60% 30%, hsl(var(--color-mustard) / 0.3), transparent 55%), linear-gradient(135deg, #2c3350 0%, hsl(var(--color-ink)) 55%, #4a3524 100%)',
+    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=1600&q=80',
   },
 ]
 
