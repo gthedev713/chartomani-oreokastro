@@ -1,10 +1,24 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { schedule, business } from '../data/content'
+import { schedule, business, getOpenStatus } from '../data/content'
 
 // Monday = 0 ... Sunday = 6
 const todayIndex = (new Date().getDay() + 6) % 7
 
+function formatMinutes(mins: number) {
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  return `${h}:${m.toString().padStart(2, '0')}`
+}
+
 export default function Visit() {
+  const [status, setStatus] = useState(() => getOpenStatus())
+
+  useEffect(() => {
+    const id = setInterval(() => setStatus(getOpenStatus()), 60_000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <section id="visit" className="py-28">
       <div className="max-w-[1180px] mx-auto px-7">
@@ -72,26 +86,44 @@ export default function Visit() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="bg-card rounded-lg p-3 shadow-soft"
+            className="bg-card rounded-lg shadow-soft overflow-hidden"
           >
-            {schedule.map((d, i) => (
-              <div
-                key={d.name}
-                className={`flex items-center justify-between px-5 py-4.5 rounded-sm transition-colors hover:bg-burgundy/5 ${
-                  i === todayIndex ? 'bg-mustard/[0.14]' : ''
+            <div className="flex items-center justify-between px-7 py-5 border-b border-ink/[0.06]">
+              <span className="text-xs tracking-widest uppercase font-semibold text-text-soft">Ώρες λειτουργίας</span>
+              <span
+                className={`inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full ${
+                  status.open ? 'bg-sage/15 text-sage' : 'bg-burgundy/10 text-burgundy'
                 }`}
               >
-                <div className="font-semibold flex items-center gap-2.5">
-                  {d.name}
-                  {i === todayIndex && (
-                    <span className="bg-mustard text-ink text-[0.68rem] font-bold px-2.5 py-0.5 rounded-full tracking-wide">
-                      ΣΗΜΕΡΑ
-                    </span>
-                  )}
+                <span className={`w-1.5 h-1.5 rounded-full ${status.open ? 'bg-sage' : 'bg-burgundy'}`} />
+                {status.open
+                  ? `Ανοιχτά · κλείνει ${formatMinutes(status.closesAt!)}`
+                  : status.opensAt !== undefined
+                  ? `Κλειστά · ανοίγει ${formatMinutes(status.opensAt)}`
+                  : 'Κλειστά'}
+              </span>
+            </div>
+
+            <div className="px-7 py-2">
+              {schedule.map((d, i) => (
+                <div
+                  key={d.name}
+                  className={`flex items-center justify-between py-3.5 ${
+                    i !== schedule.length - 1 ? 'border-b border-ink/[0.06]' : ''
+                  }`}
+                >
+                  <div className="font-semibold flex items-center gap-2.5 text-sm">
+                    {d.name}
+                    {i === todayIndex && (
+                      <span className="bg-mustard text-ink text-[0.68rem] font-bold px-2.5 py-0.5 rounded-full tracking-wide">
+                        ΣΗΜΕΡΑ
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-text-soft text-sm tabular-nums">{d.hours}</div>
                 </div>
-                <div className="text-text-soft text-sm">{d.hours}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
