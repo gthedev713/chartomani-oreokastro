@@ -41,7 +41,7 @@ export const heroSlides = [
     headlineSuffix: ' να τα διαλέξουμε μαζί',
     sub: 'Τετράδια, κασετίνες, βιβλία της χρονιάς — ό,τι λείπει από τη λίστα, το παραγγέλνουμε και έρχεται σε λίγες μέρες.',
     ctaPrimary: { label: 'Δείτε τα προϊόντα', href: '#services' },
-    ctaSecondary: { label: 'Καλέστε μας', href: 'tel:+30XXXXXXXXXX' },
+    ctaSecondary: { label: 'Καλέστε μας', href: `tel:${business.phone}` },
     spines: [
       { w: 22, h: 88, color: 'hsl(var(--color-sage))' },
       { w: 28, h: 70, color: 'hsl(var(--color-mustard))' },
@@ -61,7 +61,7 @@ export const heroSlides = [
     headlineSuffix: ' αφορμή',
     sub: 'Ψαχουλέψτε ανάμεσα σε ό,τι απρόσμενο κρύβει το μαγαζί — σχεδόν πάντα βρίσκεται το σωστό δώρο.',
     ctaPrimary: { label: 'Ανακαλύψτε', href: '#services' },
-    ctaSecondary: { label: 'Οδηγίες', href: '#visit' },
+    ctaSecondary: { label: 'Οδηγίες', href: business.mapsUrl },
     spines: [
       { w: 24, h: 80, color: 'hsl(var(--color-burgundy))' },
       { w: 20, h: 65, color: 'hsl(var(--color-paper))' },
