@@ -59,7 +59,9 @@ export default function Header() {
             ☎ Κλήση
           </a>
           <a
-            href="#visit"
+            href={business.mapsUrl}
+            target="_blank"
+            rel="noreferrer"
             className="hidden md:inline-flex items-center gap-2 bg-burgundy text-paper rounded-full px-5 py-2.5 text-sm font-semibold hover:bg-burgundy-deep hover:-translate-y-0.5 hover:shadow-soft transition-all"
           >
             Οδηγίες
@@ -101,7 +103,12 @@ export default function Header() {
               <a href={`tel:${business.phone}`} className="bg-burgundy text-paper rounded-full px-5 py-2.5 text-sm font-semibold">
                 ☎ Κλήση
               </a>
-              <a href="#visit" className="border border-ink-soft rounded-full px-5 py-2.5 text-sm font-semibold">
+              <a
+                href={business.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="border border-ink-soft rounded-full px-5 py-2.5 text-sm font-semibold"
+              >
                 Οδηγίες
               </a>
             </div>
