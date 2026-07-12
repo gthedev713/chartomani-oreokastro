@@ -3,10 +3,9 @@ export const business = {
   city: 'Ωραιόκαστρο',
   rating: 4.9,
   reviewCount: 187,
-  // TODO: replace with the real values before publishing
-  phone: '+30XXXXXXXXXX',
-  phoneDisplay: '[Τηλέφωνο καταστήματος]',
-  address: '[Διεύθυνση καταστήματος], Ωραιόκαστρο',
+  phone: '+302310698432',
+  phoneDisplay: '2310 698 432',
+  address: 'Υψηλάντου 49, 570 13 Ωραιόκαστρο',
   mapsUrl: 'https://maps.google.com',
 }
 
@@ -152,6 +151,33 @@ export const schedule = [
   { name: 'Σάββατο', hours: '8:30 – 14:30' },
   { name: 'Κυριακή', hours: 'Κλειστά' },
 ]
+
+// Parses an hours string like "8:30 – 14:00 & 17:30 – 21:00" or "Κλειστά" into
+// a list of [startMinutes, endMinutes] ranges for live open/closed status.
+function parseRanges(hours: string): [number, number][] {
+  if (hours.trim() === 'Κλειστά') return []
+  return hours.split('&').map((part) => {
+    const [start, end] = part.trim().split('–').map((t) => t.trim())
+    const toMinutes = (t: string) => {
+      const [h, m] = t.split(':').map(Number)
+      return h * 60 + m
+    }
+    return [toMinutes(start), toMinutes(end)]
+  })
+}
+
+export function getOpenStatus(now: Date = new Date()) {
+  const todayIndex = (now.getDay() + 6) % 7 // Monday = 0 ... Sunday = 6
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+  const ranges = parseRanges(schedule[todayIndex].hours)
+  const activeRange = ranges.find(([start, end]) => nowMinutes >= start && nowMinutes < end)
+
+  if (activeRange) {
+    return { open: true, closesAt: activeRange[1] }
+  }
+  const nextRange = ranges.find(([start]) => nowMinutes < start)
+  return { open: false, opensAt: nextRange?.[0] }
+}
 
 export const navLinks = [
   { label: 'Αρχική', href: '#home' },
