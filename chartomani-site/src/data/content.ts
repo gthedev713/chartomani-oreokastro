@@ -6,7 +6,7 @@ export const business = {
   phone: '+302310698432',
   phoneDisplay: '2310 698 432',
   address: 'Υψηλάντου 49, 570 13 Ωραιόκαστρο',
-  mapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Υψηλάντου 49, 570 13 Ωραιόκαστρο')}`,
+  mapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Χαρτομάνι, Υψηλάντου 49, 570 13 Ωραιόκαστρο')}`,
 }
 
 export const heroSlides = [
