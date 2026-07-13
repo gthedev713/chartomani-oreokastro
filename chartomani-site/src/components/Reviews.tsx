@@ -64,7 +64,7 @@ export default function Reviews() {
               >
                 <p className="font-serif-display italic text-lg leading-relaxed">&ldquo;{r.quote}&rdquo;</p>
                 <div>
-                  <div className="mt-5 font-semibold text-sm text-burgundy">Google κριτική</div>
+                  <div className="mt-5 font-semibold text-sm text-burgundy">{r.author}</div>
                   <div className="text-sm text-text-soft">{r.meta}</div>
                 </div>
               </motion.div>
