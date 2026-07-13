@@ -1,23 +1,32 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { schedule, business, getOpenStatus } from '../data/content'
+import { schedule, business } from '../data/content'
 
 // Monday = 0 ... Sunday = 6
 const todayIndex = (new Date().getDay() + 6) % 7
 
-function formatMinutes(mins: number) {
-  const h = Math.floor(mins / 60)
-  const m = mins % 60
-  return `${h}:${m.toString().padStart(2, '0')}`
+function isOpenNow(): boolean {
+  const todayHours = schedule[todayIndex].hours
+  if (todayHours === 'Κλειστά') return false
+
+  const now = new Date()
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+
+  // e.g. "8:30 – 14:00 & 17:30 – 21:00" -> ["8:30 – 14:00", "17:30 – 21:00"]
+  const ranges = todayHours.split('&').map((r) => r.trim())
+
+  return ranges.some((range) => {
+    const [start, end] = range.split('–').map((t) => t.trim())
+    if (!start || !end) return false
+    const [sh, sm] = start.split(':').map(Number)
+    const [eh, em] = end.split(':').map(Number)
+    const startMinutes = sh * 60 + sm
+    const endMinutes = eh * 60 + em
+    return nowMinutes >= startMinutes && nowMinutes < endMinutes
+  })
 }
 
 export default function Visit() {
-  const [status, setStatus] = useState(() => getOpenStatus())
-
-  useEffect(() => {
-    const id = setInterval(() => setStatus(getOpenStatus()), 60_000)
-    return () => clearInterval(id)
-  }, [])
+  const open = isOpenNow()
 
   return (
     <section id="visit" className="py-28">
@@ -88,40 +97,56 @@ export default function Visit() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="bg-card rounded-lg shadow-soft overflow-hidden"
           >
-            <div className="flex items-center justify-between px-7 py-5 border-b border-ink/[0.06]">
-              <span className="text-xs tracking-widest uppercase font-semibold text-text-soft">Ώρες λειτουργίας</span>
-              <span
-                className={`inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full ${
-                  status.open ? 'bg-sage/15 text-sage' : 'bg-burgundy/10 text-burgundy'
+            <div className="flex items-center justify-between px-6 py-5 border-b border-ink/[0.06]">
+              <div className="font-serif-display font-semibold text-lg">Ωράριο λειτουργίας</div>
+              <div
+                className={`flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full ${
+                  open ? 'bg-sage/15 text-sage' : 'bg-ink/[0.06] text-text-soft'
                 }`}
               >
-                <span className={`w-1.5 h-1.5 rounded-full ${status.open ? 'bg-sage' : 'bg-burgundy'}`} />
-                {status.open
-                  ? `Ανοιχτά · κλείνει ${formatMinutes(status.closesAt!)}`
-                  : status.opensAt !== undefined
-                  ? `Κλειστά · ανοίγει ${formatMinutes(status.opensAt)}`
-                  : 'Κλειστά'}
-              </span>
+                <span className="relative flex w-2 h-2">
+                  {open && (
+                    <span className="absolute inline-flex w-full h-full rounded-full bg-sage opacity-75 animate-ping" />
+                  )}
+                  <span className={`relative inline-flex rounded-full w-2 h-2 ${open ? 'bg-sage' : 'bg-text-soft'}`} />
+                </span>
+                {open ? 'Ανοιχτά τώρα' : 'Κλειστά τώρα'}
+              </div>
             </div>
 
-            <div className="px-7 py-2">
+            <div className="px-3 py-2">
               {schedule.map((d, i) => (
-                <div
+                <motion.div
                   key={d.name}
-                  className={`flex items-center justify-between py-3.5 ${
-                    i !== schedule.length - 1 ? 'border-b border-ink/[0.06]' : ''
-                  }`}
+                  initial={{ opacity: 0, x: -8 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className={`group flex items-center justify-between px-3 py-3.5 rounded-md transition-colors ${
+                    i === todayIndex ? '' : 'hover:bg-ink/[0.03]'
+                  } ${i !== schedule.length - 1 ? 'border-b border-ink/[0.05]' : ''}`}
                 >
-                  <div className="font-semibold flex items-center gap-2.5 text-sm">
-                    {d.name}
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                        i === todayIndex ? 'bg-mustard' : 'bg-transparent group-hover:bg-ink/20'
+                      }`}
+                    />
+                    <span className={i === todayIndex ? 'font-semibold text-ink' : 'text-text-soft'}>{d.name}</span>
                     {i === todayIndex && (
-                      <span className="bg-mustard text-ink text-[0.68rem] font-bold px-2.5 py-0.5 rounded-full tracking-wide">
+                      <span className="bg-mustard/15 text-mustard text-[0.68rem] font-bold px-2 py-0.5 rounded-full tracking-wide">
                         ΣΗΜΕΡΑ
                       </span>
                     )}
                   </div>
-                  <div className="text-text-soft text-sm tabular-nums">{d.hours}</div>
-                </div>
+                  <div
+                    className={`text-sm tabular-nums ${
+                      i === todayIndex ? 'font-semibold text-ink' : 'text-text-soft'
+                    } ${d.hours === 'Κλειστά' ? 'italic opacity-70' : ''}`}
+                  >
+                    {d.hours}
+                  </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
