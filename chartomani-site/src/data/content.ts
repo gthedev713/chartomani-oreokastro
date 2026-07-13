@@ -3,10 +3,11 @@ export const business = {
   city: 'Ωραιόκαστρο',
   rating: 4.9,
   reviewCount: 187,
-  phone: '+302310698432',
-  phoneDisplay: '2310 698 432',
-  address: 'Υψηλάντου 49, 570 13 Ωραιόκαστρο',
-  mapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent('Χαρτομάνι, Υψηλάντου 49, 570 13 Ωραιόκαστρο')}`,
+  // TODO: replace with the real values before publishing
+  phone: '+30XXXXXXXXXX',
+  phoneDisplay: '[Τηλέφωνο καταστήματος]',
+  address: '[Διεύθυνση καταστήματος], Ωραιόκαστρο',
+  mapsUrl: 'https://maps.google.com',
 }
 
 export const heroSlides = [
@@ -41,7 +42,7 @@ export const heroSlides = [
     headlineSuffix: ' να τα διαλέξουμε μαζί',
     sub: 'Τετράδια, κασετίνες, βιβλία της χρονιάς — ό,τι λείπει από τη λίστα, το παραγγέλνουμε και έρχεται σε λίγες μέρες.',
     ctaPrimary: { label: 'Δείτε τα προϊόντα', href: '#services' },
-    ctaSecondary: { label: 'Καλέστε μας', href: `tel:${business.phone}` },
+    ctaSecondary: { label: 'Καλέστε μας', href: 'tel:+30XXXXXXXXXX' },
     spines: [
       { w: 22, h: 88, color: 'hsl(var(--color-sage))' },
       { w: 28, h: 70, color: 'hsl(var(--color-mustard))' },
@@ -61,7 +62,7 @@ export const heroSlides = [
     headlineSuffix: ' αφορμή',
     sub: 'Ψαχουλέψτε ανάμεσα σε ό,τι απρόσμενο κρύβει το μαγαζί — σχεδόν πάντα βρίσκεται το σωστό δώρο.',
     ctaPrimary: { label: 'Ανακαλύψτε', href: '#services' },
-    ctaSecondary: { label: 'Οδηγίες', href: business.mapsUrl },
+    ctaSecondary: { label: 'Οδηγίες', href: '#visit' },
     spines: [
       { w: 24, h: 80, color: 'hsl(var(--color-burgundy))' },
       { w: 20, h: 65, color: 'hsl(var(--color-paper))' },
@@ -126,16 +127,19 @@ export const reviews = [
   {
     quote:
       'Το αγαπημένο μας μικρό βιβλιοπωλείο της γειτονιάς — μας προτείνουν βιβλία, μας εξυπηρετούν με ιδιαίτερα δώρα και πάντα αφήνουν χρόνο για ένα καλό ψάξιμο στα ράφια.',
+    author: 'Ευαγγελία Χαραλαμπίδου',
     meta: 'πριν από έναν χρόνο',
   },
   {
     quote:
       'Φιλόξενος χώρος με ό,τι ζητήσεις — βιβλία, σχολικά, δώρα. Κι αν κάτι λείπει, έρχεται σε ελάχιστες μέρες. Πουθενά αλλού δεν σε εξυπηρετούν τόσο καλά όσο η Ευαγγελία.',
+    author: 'Marianna Karagkiozi',
     meta: 'πριν από 11 μήνες',
   },
   {
     quote:
       'Δεν ξέρω αν είναι ο χώρος, οι άνθρωποι, τα προϊόντα ή οι γατούληδες — πάντως αυτό το βιβλιοπωλείο ξεχωρίζει.',
+    author: 'Annalia Ignatoglou',
     meta: 'πριν από 8 μήνες',
   },
 ]
@@ -151,33 +155,6 @@ export const schedule = [
   { name: 'Σάββατο', hours: '8:30 – 14:30' },
   { name: 'Κυριακή', hours: 'Κλειστά' },
 ]
-
-// Parses an hours string like "8:30 – 14:00 & 17:30 – 21:00" or "Κλειστά" into
-// a list of [startMinutes, endMinutes] ranges for live open/closed status.
-function parseRanges(hours: string): [number, number][] {
-  if (hours.trim() === 'Κλειστά') return []
-  return hours.split('&').map((part) => {
-    const [start, end] = part.trim().split('–').map((t) => t.trim())
-    const toMinutes = (t: string) => {
-      const [h, m] = t.split(':').map(Number)
-      return h * 60 + m
-    }
-    return [toMinutes(start), toMinutes(end)]
-  })
-}
-
-export function getOpenStatus(now: Date = new Date()) {
-  const todayIndex = (now.getDay() + 6) % 7 // Monday = 0 ... Sunday = 6
-  const nowMinutes = now.getHours() * 60 + now.getMinutes()
-  const ranges = parseRanges(schedule[todayIndex].hours)
-  const activeRange = ranges.find(([start, end]) => nowMinutes >= start && nowMinutes < end)
-
-  if (activeRange) {
-    return { open: true, closesAt: activeRange[1] }
-  }
-  const nextRange = ranges.find(([start]) => nowMinutes < start)
-  return { open: false, opensAt: nextRange?.[0] }
-}
 
 export const navLinks = [
   { label: 'Αρχική', href: '#home' },
